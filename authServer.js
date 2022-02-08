@@ -8,6 +8,12 @@ app.use(express.json());
 
 let refreshTokens = [];
 
+const generateAccessToken = (user) => {
+  return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+    expiresIn: "65s",
+  });
+};
+
 app.post("/token", (req, res) => {
   const refreshToken = req.body.token;
   if (refreshToken == null) return res.sendStatus(401);
@@ -35,10 +41,5 @@ app.post("/login", (req, res) => {
   refreshTokens.push(refreshToken);
   res.json({ accessToken, refreshToken });
 });
-const generateAccessToken = (user) => {
-  return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: "65s",
-  });
-};
 
 app.listen(4000);
